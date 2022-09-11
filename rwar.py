@@ -1,7 +1,7 @@
 #! /bin/python3
 
 import argparse
-import File
+
 
 parser = argparse.ArgumentParser(
     prog='rwar', description="A simple static site generator")
