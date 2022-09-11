@@ -1,6 +1,6 @@
 import shutil
-from os import listdir, mkdir
-from os.path import isfile, join, isdir
+from os import mkdir
+from os.path import isfile, isdir
 
 
 class SSG:
@@ -50,12 +50,12 @@ class SSG:
         with open(input, 'r', encoding='utf-8') as file:
             lines = file.readlines()
 
-        title = output.split('/')[-1][:-4]
+        title = output.split('/')[-1][:-4]  # index
 
         if len(lines) >= 3 and lines[1] == lines[2] == '\n':
             title = lines[0].strip()
             lines = lines[3:]
-
+            print(title)
         with open(output[:-4]+'.html', 'w', encoding='utf-8') as file:
             file.write('''<!DOCTYPE html>\n''')
             file.write('''<html lang="en">\n''')
