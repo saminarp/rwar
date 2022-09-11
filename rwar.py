@@ -1,13 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
 import argparse
-from src import File
-
 from clint.arguments import Args
 from clint.textui import puts, colored, indent
 from pyfiglet import Figlet
 
+from src import File
 
 args = Args()
 parser = argparse.ArgumentParser(
@@ -25,7 +23,8 @@ parser.add_argument('--version', '-v', action='version',
 
 
 if __name__ == '__main__':
-    print(Figlet(font='slant').renderText('rwar'))
+    # print(Figlet(font='slant').renderText('rwar'))
+    puts(colored.blue(Figlet(font='slant').renderText('rwar')))
     with indent(4, quote='>>>'):
         puts(colored.green('rwar v0.1'))
         puts(colored.green(

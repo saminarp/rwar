@@ -1,6 +1,6 @@
 import shutil
-from os import mkdir
-from os.path import isfile, isdir
+from os import listdir, mkdir
+from os.path import isfile, join, isdir
 
 
 class SSG:
@@ -90,6 +90,65 @@ class SSG:
                 file.write('''<p>\n''')
                 file.write(' '.join(lines[last_i:]))
                 file.write('''</p>\n''')
+
+            file.write('''</div>\n''')
+            file.write('''</body>\n''')
+
+            file.write('''</html>''')
+
+    def process_dir(self, input, output):
+        # directories in input folder
+        onlydir = sorted([f for f in listdir(input) if isdir(join(input, f))])
+
+        # files in input folder
+        onlytxt = sorted([f for f in listdir(input) if isfile(
+            join(input, f)) and f.endswith('.txt')])
+
+        # recursively process directories
+        for directory in onlydir:
+            mkdir(join(output, directory))
+            self.process_dir(join(input, directory), join(output, directory))
+
+        # process txt files
+        for txtfile in onlytxt:
+            self.process_file(join(input, txtfile), join(output, txtfile))
+
+        # title excluding the destination directory path
+        title = output[len(self.output):]
+
+        # create index.html file
+        with open(join(output, 'index.html'), 'w', encoding='utf-8') as file:
+
+            file.write('''<!DOCTYPE html>\n''')
+            file.write('''<html lang="en">\n''')
+
+            file.write('''<head>\n''')
+            file.write('''<meta charset="UTF-8">\n''')
+            file.write(
+                '''<meta name="viewport" content="width=device-width, initial-scale=1.0">\n''')
+            file.write(
+                '''<meta http-equiv="X-UA-Compatible" content="ie=edge">\n''')
+            file.write(f'''<title>{title}</title>\n''')
+            file.write('\n'.join(
+                [f'''<link rel="stylesheet" href="{stylesheet}">'''
+                 for stylesheet in self.stylesheets]))
+            file.write('''\n</head>\n''')
+
+            file.write('''<body>\n''')
+            file.write(f'''<h1>{title}</h1>\n''')
+            file.write('''<div class="content">\n''')
+
+            file.write('''<ul>\n''')
+            # List directories at first
+            file.write('\n'.join(
+                [f'''<li><a href="{directory}/index.html">{directory}</a></li>'''
+                 for directory in onlydir]))
+            file.write('\n')
+            # List files afterwards
+            file.write('\n'.join(
+                [f'''<li><a href="{txtfile[:-4]+'.html'}">{txtfile[:-4]}</a></li>'''
+                 for txtfile in onlytxt]))
+            file.write('''\n</ul>\n''')
 
             file.write('''</div>\n''')
             file.write('''</body>\n''')
