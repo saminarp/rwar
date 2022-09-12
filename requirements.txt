@@ -1,7 +1,10 @@
 brotlipy==0.7.0
-certifi==2021.10.8
-conda==4.12.0
+certifi==2022.6.15.1
+conda==4.3.16
 docopt==0.6.2
 pipreqs==0.4.11
 pycosat==0.6.3
 yarg==0.1.9
+clint==0.5.1
+pyfiglet==0.8.post1
+autopep8==1.5.7
