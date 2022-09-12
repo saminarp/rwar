@@ -1,21 +1,25 @@
-# Simple Static Site Generator (rwar)
+# Rwar Static Site Generator 🦁
 
-This is a simple static site generator written in Python.
+Simple static site generator written in Python.
 
 ## Usage
 
-To use this program, you must have Python 3 installed. You can then run the program by running the following command:
+To use this program, you must have Python 3 installed. The `requirements.txt` file is listing all the dependencies for `rwar`. To satisfy these requirements run the following command `pip3 install -r requirements.txt`
+ You can then run the program by running the following command:
 
-```python rwar.py -i <input directory>```
+```python
+python3 rwar.py -i <input directory>
+```
 
-> **Note:** Unix users may need to use `python3` instead of `python`.
-> If you are using bash, you can use the following command to run the program:
-```./rwar.py -i <input directory>```
+If you are in in Unix environment, you can use the following command to run:
 
-The program will then generate a static site in the `./dist` directory by default. You can change this by using the `-o` flag.
+```bash
+./rwar.py -i <input directory> #works in macOS
+```
 
-You can also provide a custom stylesheet by using the `-s` flag.
+> **Note:** If you are not using bash you may need to use `python` instead of `python3`.
 
-To see all available options, run the following command:
-
-    python rwar.py -h
+- The program will then generate a static site in the `./dist` directory by default. You can change this by using the `-o` flag.
+- You can also provide a custom stylesheet by using the `-s` flag.
+- To see all available options, run the following command:
+- To see all available options, run the following command: `./rwar -h`
