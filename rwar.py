@@ -21,10 +21,8 @@ parser.add_argument('--stylesheet', '-s', nargs=1, required=False,
 parser.add_argument('--version', '-v', action='version',
                     version='%(prog)s v0.1')
 
-
 if __name__ == '__main__':
-    # print(Figlet(font='slant').renderText('rwar'))
-    puts(colored.blue(Figlet(font='slant').renderText('rwar')))
+    puts(colored.magenta(Figlet(font='slant').renderText('rwar')))
     with indent(4, quote='>>>'):
         puts(colored.green('rwar v0.1'))
         puts(colored.green(
@@ -32,8 +30,8 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
     # take the only argument as input
-    myssg = File.SSG(args.output[0], args.stylesheet[0]
-                     if args.stylesheet is not None else None)
+    rwar = File.SSG(args.output[0], args.stylesheet[0]
+                    if args.stylesheet is not None else None)
 
     # start the static site generator
-    myssg.start(args.input[0])
+    rwar.start(args.input[0])

@@ -24,14 +24,12 @@ class SSG:
             file.write(
                 '''a { text-decoration: none; color: #008080; }\na:hover
                 { text-decoration: dotted underline; }\n''')
-
             file.write('''body { background-color: #bbb; }\n''')
 
             # title style
             file.write(
                 '''h1 { text-align: center;
                 font-family: 'Times New Roman', serif; font-style: italic; }\n''')
-
             # main content style
             file.write(
                 '''div.content { max-width: 920px; font-family: Arial, sans-serif; padding: 20px;
@@ -39,7 +37,6 @@ class SSG:
 
     def start(self, input, output=None):
         output = self.output if output is None else output
-
         if isfile(input) and input.endswith('.txt'):
             # single file, index of the static site
             self.process_file(input, output.rstrip('/') + '/index.txt')
@@ -49,7 +46,6 @@ class SSG:
     def process_file(self, input, output):
         with open(input, 'r', encoding='utf-8') as file:
             lines = file.readlines()
-
         title = output.split('/')[-1][:-4]  # index
 
         if len(lines) >= 3 and lines[1] == lines[2] == '\n':
@@ -76,7 +72,6 @@ class SSG:
 
             file.write('''<body>\n''')
             file.write(f'''<h1>{title}</h1>\n''')
-
             file.write('''<div class="content">\n''')
             last_i = 0
             for i, line in enumerate(lines[last_i:]):
