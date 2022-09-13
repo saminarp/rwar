@@ -1,6 +1,7 @@
 import shutil
 from os import listdir, mkdir
 from os.path import isfile, join, isdir
+from src import Utils
 
 
 class SSG:
@@ -9,34 +10,37 @@ class SSG:
         self.stylesheets = ['/style.css']
         if stylesheet is not None:
             self.stylesheets.append(stylesheet)
-        # existing destination directory is deleted
-        shutil.rmtree(self.output, ignore_errors=True)
-        # create destination directory
-        mkdir(self.output)
-        # create stylesheet file
+        try:
+            if Utils.checkIfOutFlag(self.output):
+                mkdir(self.output)
+            else:
+                mkdir(self.output + '/dist')
+        except FileExistsError:
+            if Utils.checkIfOutFlag(self.output):  # default
+                shutil.rmtree(self.output)
+                mkdir(self.output)
+            else:
+                shutil.rmtree(self.output + '/dist')
+                mkdir(self.output + '/dist')
+        except FileNotFoundError:
+            Utils.errLog('Specified output directory not found')
         self.write_stylesheet_file(self.stylesheets[0])
 
     def write_stylesheet_file(self, stylesheet):
-        with open(self.output + stylesheet, 'w', encoding='utf-8') as file:
-            # directory list styles
-            file.write('''ul { list-style-type: "→"; }\n''')
-            file.write('''li { padding-left: 10px; margin-bottom: 5px;}\n''')
-            file.write(
-                '''a { text-decoration: none; color: #008080; }\na:hover
-                { text-decoration: dotted underline; }\n''')
-            file.write('''body { background-color: #bbb; }\n''')
-
-            # title style
-            file.write(
-                '''h1 { text-align: center;
-                font-family: 'Times New Roman', serif; font-style: italic; }\n''')
-            # main content style
-            file.write(
-                '''div.content { max-width: 920px; font-family: Arial, sans-serif; padding: 20px;
-                border: 1px solid #111; background-color: #fff; margin: 20px auto; }\n''')
+        if Utils.checkIfOutFlag(self.output):
+            with open(self.output + stylesheet, 'w', encoding='utf-8') as file:
+                # directory list styles
+                Utils.writeCSSToFile(file)
+        else:
+            with open(self.output + '/dist' + stylesheet, 'w', encoding='utf-8') as file:
+                # directory list styles
+                Utils.writeCSSToFile(file)
 
     def start(self, input, output=None):
-        output = self.output if output is None else output
+        if Utils.checkIfOutFlag(self.output):
+            output = self.output if output is None else output
+        else:
+            output = self.output + '/dist' if output is None else output
         if isfile(input) and input.endswith('.txt'):
             # single file, index of the static site
             self.process_file(input, output.rstrip('/') + '/index.txt')
