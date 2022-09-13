@@ -5,4 +5,4 @@ pycosat==0.6.3
 yarg==0.1.9
 clint==0.5.1
 pyfiglet==0.8.post1
-autopep8==1.5.7
+autopep8==1.7.0
