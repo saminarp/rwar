@@ -78,12 +78,12 @@ class SSG:
             file.write(f'''<h1>{title}</h1>\n''')
             file.write('''<div class="content">\n''')
             last_i = 0
-            for i, line in enumerate(lines[last_i:]):
-                if line == '\n':
+            for i in range(len(lines)):
+                if lines[i] == '\n':
                     file.write('''<p>\n''')
-                    file.write(' '.join(lines[last_i:last_i+i]))
+                    file.write(' '.join(lines[last_i:i]))
                     file.write('''</p>\n''')
-                    last_i = last_i + i + 1
+                    last_i = i + 1
             # If there is no empty line at the end of the file
             if last_i < len(lines):
                 file.write('''<p>\n''')
