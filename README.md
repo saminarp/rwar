@@ -12,9 +12,14 @@
   </p>
 </div>
 
+## Overview
+
+__rwar__ - A simple bare-bones Static Site Generator (SSG) with minimal features. An SSG allows a user to generate a complete HTML website from raw data and files, without having to write out the HTML. Rwar is a command line tool that takes .txt files as input and generates .html files as output.
+
 ## Usage
 
-Please ensure Python 3 is installed.\
+Please ensure Python 3 is installed.
+
 The `requirements.txt` file lists all the dependencies needed for `rwar`
 
 To satisfy these requirements run the following command `pip install -r requirements.txt`
