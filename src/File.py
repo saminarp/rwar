@@ -46,6 +46,8 @@ class SSG:
             self.process_file(input, output.rstrip('/') + '/index.txt')
         elif isdir(input):
             self.process_dir(input, output)
+        else:
+            Utils.errLog('Invalid input file')
 
     def process_file(self, input, output):
         with open(input, 'r', encoding='utf-8') as file:
