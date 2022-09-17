@@ -2,7 +2,7 @@
 <br />
 <div align="center">
 
-  <img src="./logo/lion.png" alt="Logo" width="200" height="200">
+  <img src="https://i.imgur.com/wWF6kL8.png" alt="Logo" width="200" height="200">
 
 <h3 align="center">rwar</h3>
   <p align="center">

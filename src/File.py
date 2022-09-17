@@ -55,7 +55,8 @@ class SSG:
         if len(lines) >= 3 and lines[1] == lines[2] == '\n':
             title = lines[0].strip()
             lines = lines[3:]
-            print(title)
+            # Print the file names consisting of the title
+            print(output.split('/')[-1][:-4])
         with open(output[:-4]+'.html', 'w', encoding='utf-8') as file:
             file.write('''<!DOCTYPE html>\n''')
             file.write('''<html lang="en">\n''')
