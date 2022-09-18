@@ -26,18 +26,31 @@ To satisfy these requirements run the following command `pip install -r requirem
  You can then run the program by running the following command:
 
 ```bash
-python3 rwar.py -i <input> # (For input either put .txt file or specify the directory containing txt files)
+# satisfy the dependencies listed in requirements.txt
+pip install -r requirements.txt
+# (For input either put .txt file or specify the directory containing txt files)
+python3 rwar.py -i <input> 
 ```
 
 If you are in a Unix environment, you can use the following commands to run:
 
 ```bash
-chmod +x rwar.py # This will make the file executable
-./rwar.py -i <input> #works in macOS or Unix based systems
+# make it executable
+chmod +x rwar.py 
+# run
+./rwar.py -i <input> 
 ```
 
-> **Note:** If you are not using bash, you may need to use `python` instead of `python3`.
+> **Note:** If you are not in Unix env, you may need to use `python` instead of `python3`.
 
 - The program will generate a static site in the `./dist` directory within the project by default. You can change this behavior by using the `-o` flag. If you choose to specify your desired directory, it will create dist as a sub-folder within the directory you specify.
 - You can also provide a custom stylesheet by using the `-s` flag.
 - To see all available options, run the following command: `./rwar -h` or `python3 rwar.py -h`
+
+### Flags
+| Flag | Description | Required / Optional |
+| --- | --- | --- |
+| `-i` | Specify raw data directory or file e.g. use `data` directory in the repo | Required |
+| `-o` | The program will generate a static site in the `./dist` directory within the project by default. You can change this behavior by using the `-o` flag. If you choose to specify your desired directory, it will create dist as a sub-folder within the directory you specify. | Optional |
+| `-s` | Provide a custom stylesheet by using the `-s` flag<br> By default it uses [water.css](https://cdn.jsdelivr.net/npm/water.css@2/out/water.css)| Optional|
+| `-h` | This will display all the available options and usage of `rwar` | Optional |

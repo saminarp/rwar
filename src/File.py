@@ -53,6 +53,7 @@ class SSG:
         with open(input, 'r', encoding='utf-8') as file:
             lines = file.readlines()
         title = output.split('/')[-1][:-4]  # index
+        title = title if title != 'index' else output.split('/')[-2]
 
         if len(lines) >= 3 and lines[1] == lines[2] == '\n':
             title = lines[0].strip()
