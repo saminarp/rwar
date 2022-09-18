@@ -10,6 +10,7 @@
     <br />
     </a>
   </p>
+   <a href="https://rwarr.netlify.app">Demo</a> . <a href="https://dev.to/saminarp/rwar-a-simple-static-site-generator-2b5a">Blog</a>
 </div>
 
 ## Overview
