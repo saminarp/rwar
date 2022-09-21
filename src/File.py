@@ -54,12 +54,14 @@ class SSG:
             lines = file.readlines()
         title = output.split('/')[-1][:-4]  # index
         title = title if title != 'index' else output.split('/')[-2]
-
-        if len(lines) >= 3 and lines[1] == lines[2] == '\n':
+        try:
             title = lines[0].strip()
             lines = lines[3:]
-            # Print the file names consisting of the title
-            print(output.split('/')[-1][:-4])
+            print(">> ", title)
+        except IndexError:
+            if len(lines) == 0 and input.endswith('.txt'):
+                Utils.errLog(f'Empty file passed: {title}.txt')
+
         with open(output[:-4]+'.html', 'w', encoding='utf-8') as file:
             file.write('''<!DOCTYPE html>\n''')
             file.write('''<html lang="en">\n''')
