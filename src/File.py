@@ -57,7 +57,7 @@ class SSG:
         try:
             title = lines[0].strip()
             lines = lines[3:]
-            print(">> ", title)
+            print(">> ", output.split('/')[-1][:-4])
         except IndexError:
             if len(lines) == 0 and input.endswith('.txt'):
                 Utils.errLog(f'Empty file passed: {title}.txt')
