@@ -15,7 +15,7 @@
 
 ## Overview
 
-__rwar__ - A simple bare-bones Static Site Generator (SSG) with minimal features. An SSG allows a user to generate a complete HTML website from raw data and files, without having to write out the HTML. Rwar is a command line tool that takes .txt files as input and generates .html files as output.
+__rwar__ - A simple bare-bones Static Site Generator (SSG) with minimal features. An SSG allows a user to generate a complete HTML website from raw data and files, without having to write out the HTML. Rwar is a command line tool that takes .txt and .md files as input and generates .html files as output.
 
 ## Usage
 
@@ -44,14 +44,21 @@ chmod +x rwar.py
 
 > **Note:** If you are not in Unix env, you may need to use `python` instead of `python3`.
 
-- The program will generate a static site in the `./dist` directory within the project by default. You can change this behavior by using the `-o` flag. If you choose to specify your desired directory, it will create dist as a sub-folder within the directory you specify.
-- You can also provide a custom stylesheet by using the `-s` flag.
-- To see all available options, run the following command: `./rwar -h` or `python3 rwar.py -h`
+
 
 ### Flags
 | Flag | Description | Required / Optional |
-| --- | --- | --- |
-| `-i` | Specify raw data directory or file e.g. use `data` directory in the repo | Required |
-| `-o` | The program will generate a static site in the `./dist` directory within the project by default. You can change this behavior by using the `-o` flag. If you choose to specify your desired directory, it will create dist as a sub-folder within the directory you specify. | Optional |
-| `-s` | Provide a custom stylesheet by using the `-s` flag<br> By default it uses [water.css](https://cdn.jsdelivr.net/npm/water.css@2/out/water.css)| Optional|
-| `-h` | This will display all the available options and usage of `rwar` | Optional |
+| ---    | --- | --- |
+| ` -i ` | Specify raw data directory or file e.g. use `data` directory in the repo | Required |
+| ` -o `   | The program will generate a static site in the `./dist` directory within the project by default. You can change this behavior by using the `-o` flag. If you choose to specify your desired directory, it will create dist as a sub-folder within the directory you specify. | Optional |
+| `-s `   | Provide a custom stylesheet by using the `-s` flag<br> By default it uses [water.css](https://cdn.jsdelivr.net/npm/water.css@2/out/water.css)| Optional|
+| ` -h `   | This will display all the available options and usage of `rwar` | Optional |
+
+## Features
+
+- [x] Generates a [static site](https://en.wikipedia.org/wiki/Static_web_page) from a directory of text and markdown files (only headers) and creates `dist` folder with the generated HTML files.
+- [x] Lets you add custom stylesheet to the generated HTML files.
+- [x] Lets you specify the output directory.
+- [x] Generates list of all the generated HTML files in `index.html` file.
+
+

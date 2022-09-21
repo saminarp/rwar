@@ -44,6 +44,9 @@ class SSG:
         if isfile(input) and input.endswith('.txt'):
             # single file, index of the static site
             self.process_file(input, output.rstrip('/') + '/index.txt')
+        elif isfile(input) and input.endswith('.md'):
+            # single file, index of the static site
+            self.process_md_file(input, output.rstrip('/') + '/index.md')
         elif isdir(input):
             self.process_dir(input, output)
         else:
@@ -52,7 +55,7 @@ class SSG:
     def process_file(self, input, output):
         with open(input, 'r', encoding='utf-8') as file:
             lines = file.readlines()
-        title = output.split('/')[-1][:-4]  # index
+        title = output.split('/')[-1][:-4]  # filename
         title = title if title != 'index' else output.split('/')[-2]
         try:
             title = lines[0].strip()
@@ -101,6 +104,68 @@ class SSG:
 
             file.write('''</html>''')
 
+    def process_md_file(self, input, output):
+        with open(input, 'r', encoding='utf-8') as file:
+            lines = file.readlines()
+        title = output.split('/')[-1][:-3]  # index
+        title = title if title != 'index' else output.split('/')[-2]
+        print(">> ", title)
+        for i in range(len(lines)):
+            if (lines[i].endswith('  \n')):
+                lines[i] = lines[i][:-3] + '<br>\n'
+
+        with open(output[:-3]+'.html', 'w', encoding='utf-8') as file:
+            file.write('''<!DOCTYPE html>\n''')
+            file.write('''<html lang="en">\n''')
+
+            file.write('''<head>\n''')
+            file.write('''<meta charset="UTF-8">\n''')
+            file.write(
+                '''<meta name="viewport" content="width=device-width, initial-scale=1.0">\n''')
+            file.write(
+                '''<meta http-equiv="X-UA-Compatible" content="ie=edge">\n''')
+            file.write(f'''<title>{title}</title>\n''')
+
+            file.write('\n'.join(
+                [f'''<link rel="stylesheet" href="{stylesheet}">'''
+                 for stylesheet in self.stylesheets]))
+
+            file.write('''\n</head>\n''')
+
+            file.write('''<body>\n''')
+            file.write(f'''<h1>{title}</h1>\n''')
+            file.write('''<div class="content">\n''')
+            last_i = 0
+            for i in range(len(lines)):
+                if lines[i] == '\n' and last_i < i:
+                    file.write('''<p>\n''')
+                    file.write(' '.join(lines[last_i:i]))
+                    file.write('''</p>\n''')
+                    last_i = i + 1
+                elif lines[i].startswith('#'):
+                    tag = 'h' + str(lines[i].count('#'))
+
+                    # Print if pending text exists
+                    if (last_i < i):
+                        file.write('''<p>\n''')
+                        file.write(' '.join(lines[last_i:i]))
+                        file.write('''</p>\n''')
+                    # check if hashtag
+                    if (lines[i].startswith('#')):
+                        file.write(
+                            f'''\n<{tag}>''' + lines[i].strip('# ') + f'''</{tag}>\n''')
+                    last_i = i + 1
+            # If there is no empty line at the end of the file
+            if last_i < len(lines):
+                file.write('''<p>\n''')
+                file.write(' '.join(lines[last_i:]))
+                file.write('''</p>\n''')
+
+            file.write('''</div>\n''')
+            file.write('''</body>\n''')
+
+            file.write('''</html>''')
+
     def process_dir(self, input, output):
         # directories in input folder
         onlydir = sorted([f for f in listdir(input) if isdir(join(input, f))])
@@ -108,7 +173,8 @@ class SSG:
         # files in input folder
         onlytxt = sorted([f for f in listdir(input) if isfile(
             join(input, f)) and f.endswith('.txt')])
-
+        onlymd = sorted([f for f in listdir(input) if isfile(
+            join(input, f)) and f.endswith('.md')])
         # recursively process directories
         for directory in onlydir:
             mkdir(join(output, directory))
@@ -117,6 +183,10 @@ class SSG:
         # process txt files
         for txtfile in onlytxt:
             self.process_file(join(input, txtfile), join(output, txtfile))
+
+        # process md files
+        for mdfile in onlymd:
+            self.process_md_file(join(input, mdfile), join(output, mdfile))
 
         # title excluding the destination directory path
         title = output[len(self.output):]
@@ -153,6 +223,10 @@ class SSG:
             file.write('\n'.join(
                 [f'''<li><a href="{txtfile[:-4]+'.html'}">{txtfile[:-4]}</a></li>'''
                  for txtfile in onlytxt]))
+
+            file.write('\n'.join(
+                [f'''<li><a href="{mdfile[:-3]+'.html'}">{mdfile[:-3]}</a></li>'''
+                 for mdfile in onlymd]))
             file.write('''\n</ul>\n''')
 
             file.write('''</div>\n''')
