@@ -190,7 +190,9 @@ class SSG:
 
         # title excluding the destination directory path
         title = output[len(self.output):]
-
+        title = title if title != '' else 'RWAR'
+        # exclude the first slash
+        title = title[1:] if title.startswith('/') else title
         # create index.html file
         with open(join(output, 'index.html'), 'w', encoding='utf-8') as file:
 
