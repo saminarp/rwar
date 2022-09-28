@@ -5,8 +5,9 @@ from src import Utils
 
 
 class SSG:
-    def __init__(self, output, stylesheet):
+    def __init__(self, output, stylesheet, language):
         self.output = output
+        self.language = language
         self.stylesheets = ['/style.css']
         if stylesheet is not None:
             self.stylesheets.append(stylesheet)
@@ -67,7 +68,7 @@ class SSG:
 
         with open(output[:-4]+'.html', 'w', encoding='utf-8') as file:
             file.write('''<!DOCTYPE html>\n''')
-            file.write('''<html lang="en">\n''')
+            file.write(f'''<html lang="{self.language}">\n''')
 
             file.write('''<head>\n''')
             file.write('''<meta charset="UTF-8">\n''')
@@ -116,7 +117,7 @@ class SSG:
 
         with open(output[:-3]+'.html', 'w', encoding='utf-8') as file:
             file.write('''<!DOCTYPE html>\n''')
-            file.write('''<html lang="en">\n''')
+            file.write(f'''<html lang="{self.language}">\n''')
 
             file.write('''<head>\n''')
             file.write('''<meta charset="UTF-8">\n''')
@@ -197,7 +198,7 @@ class SSG:
         with open(join(output, 'index.html'), 'w', encoding='utf-8') as file:
 
             file.write('''<!DOCTYPE html>\n''')
-            file.write('''<html lang="en">\n''')
+            file.write(f'''<html lang="{self.language}">\n''')
 
             file.write('''<head>\n''')
             file.write('''<meta charset="UTF-8">\n''')
