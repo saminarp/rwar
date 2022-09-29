@@ -23,18 +23,4 @@ def checkIfOutFlag(output):
 
 def writeCSSToFile(file):
     # directory list styles
-    file.write('''ul { list-style-type: "→"; color: orange }\n''')
-    file.write('''li { padding-left: 10px; margin-bottom: 5px;}\n''')
-    file.write(
-        '''a { text-decoration: none; color: #008080; }\na:hover
-        { text-decoration: dotted underline; }\n''')
-    file.write('''body { background-color: #000000; }\n''')
-
-    # title style
-    file.write(
-        '''h1 { text-align: center;
-        font-family: 'Times New Roman', serif; font-style: bold; color: green; }\n''')
-    # main content style
-    file.write(
-        '''div.content { max-width: 920px; font-family: Arial, sans-serif; padding: 20px;
-        border: 1px solid #111; background-color: #ffffff; margin: 20px auto; }\n''')
+    file.write('''ul { list-style-type: "→"; }\n''')
