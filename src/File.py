@@ -143,6 +143,15 @@ class SSG:
                     file.write(' '.join(lines[last_i:i]))
                     file.write('''</p>\n''')
                     last_i = i + 1
+                elif lines[i] == '---\n' or lines[i] == '___\n' or lines[i] == '***\n':
+                    # Print if pending text exists
+                    if (last_i < i):
+                        file.write('''<p>\n''')
+                        file.write(' '.join(lines[last_i:i]))
+                        file.write('''</p>\n''')
+                    # Print the hr
+                    file.write('''<hr>\n''')
+                    last_i = i + 1
                 elif lines[i].startswith('#'):
                     tag = 'h' + str(lines[i].count('#'))
 
