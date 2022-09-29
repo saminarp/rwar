@@ -23,4 +23,4 @@ def checkIfOutFlag(output):
 
 def writeCSSToFile(file):
     # directory list styles
-    file.write('''ul { list-style-type: "→ "; }\n''')
+    file.write('''ul { list-style-type: "→  "; }\n''')
