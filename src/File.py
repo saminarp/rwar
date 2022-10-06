@@ -7,8 +7,9 @@ from src import Utils
 
 
 class SSG:
-    def __init__(self, output, stylesheet):
+    def __init__(self, output, stylesheet, language):
         self.output = output
+        self.language = language
         self.stylesheets = ['/style.css']
         if stylesheet is not None:
             self.stylesheets.append(stylesheet)
@@ -69,7 +70,7 @@ class SSG:
 
         with open(output[:-4]+'.html', 'w', encoding='utf-8') as file:
             file.write('''<!DOCTYPE html>\n''')
-            file.write('''<html lang="en">\n''')
+            file.write(f'''<html lang="{self.language}">\n''')
 
             file.write('''<head>\n''')
             file.write('''<meta charset="UTF-8">\n''')
@@ -118,7 +119,7 @@ class SSG:
 
         with open(output[:-3]+'.html', 'w', encoding='utf-8') as file:
             file.write('''<!DOCTYPE html>\n''')
-            file.write('''<html lang="en">\n''')
+            file.write(f'''<html lang="{self.language}">\n''')
 
             file.write('''<head>\n''')
             file.write('''<meta charset="UTF-8">\n''')
@@ -143,6 +144,15 @@ class SSG:
                     file.write('''<p>\n''')
                     file.write(' '.join(lines[last_i:i]))
                     file.write('''</p>\n''')
+                    last_i = i + 1
+                elif lines[i] == '---\n' or lines[i] == '___\n' or lines[i] == '***\n':
+                    # Print if pending text exists
+                    if (last_i < i):
+                        file.write('''<p>\n''')
+                        file.write(' '.join(lines[last_i:i]))
+                        file.write('''</p>\n''')
+                    # Print the hr
+                    file.write('''<hr>\n''')
                     last_i = i + 1
                 elif lines[i].startswith('#'):
                     tag = 'h' + str(lines[i].count('#'))
@@ -192,12 +202,14 @@ class SSG:
 
         # title excluding the destination directory path
         title = output[len(self.output):]
-
+        title = title if title != '' else 'RWAR'
+        # exclude the first slash
+        title = title[1:] if title.startswith('/') else title
         # create index.html file
         with open(join(output, 'index.html'), 'w', encoding='utf-8') as file:
 
             file.write('''<!DOCTYPE html>\n''')
-            file.write('''<html lang="en">\n''')
+            file.write(f'''<html lang="{self.language}">\n''')
 
             file.write('''<head>\n''')
             file.write('''<meta charset="UTF-8">\n''')

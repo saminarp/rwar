@@ -52,7 +52,9 @@ chmod +x rwar.py
 | ` -i ` | Specify raw data directory or file e.g. use `data` directory in the repo | Required |
 | ` -o `   | The program will generate a static site in the `./dist` directory within the project by default. You can change this behavior by using the `-o` flag. If you choose to specify your desired directory, it will create dist as a sub-folder within the directory you specify. | Optional |
 | `-s `   | Provide a custom stylesheet by using the `-s` flag<br> By default it uses [water.css](https://cdn.jsdelivr.net/npm/water.css@2/out/water.css)| Optional|
-| ` -h `   | This will display all the available options and usage of `rwar` | Optional |
+| ` -l`   | Indicates the language to use when generating the lang attribute on the root <html> element  | Optional |
+| ` -h `  | This will display all the available options and usage of `rwar` | Optional |
+
 
 ## Features
 
@@ -60,5 +62,8 @@ chmod +x rwar.py
 - [x] Lets you add custom stylesheet to the generated HTML files.
 - [x] Lets you specify the output directory.
 - [x] Generates list of all the generated HTML files in `index.html` file.
+- [x] Markdown support for horizontal rule 
+- [x] Language attribute of the site can be specified 
+
 
 
