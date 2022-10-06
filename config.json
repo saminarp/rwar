@@ -1,0 +1,5 @@
+{
+    "input": "./data",
+    "output": ".",
+    "stylesheet": "https://cdn.jsdelivr.net/gh/kimeiga/bahunya/dist/bahunya.min.css"
+}
