@@ -24,14 +24,32 @@ parser.add_argument('--version', '-v', action='version',
                     version='%(prog)s v0.1')
 parser.add_argument('--lang', '-l', nargs=1, required=False, default=['en-CA'],
                     help='Language of the generated HTML (by default:%(default)s)')
+
 parser.add_argument('--config', '-c',
                     nargs=1, required=False, help="Configuration JSON file", default=None)
 
-options = parser.parse_args()
+
+# options = parser.parse_args()
 
 if __name__ == '__main__':
     greeting()
     args = parser.parse_args()
+    
+    if (args.config is not None):
+        if (isfile(args.config[0])):
+            with open(args.config[0], 'r') as f:
+                options = json.load(f)
+        else:
+            print("Config file not found")
+            exit(1)
+        
+        setattr(args, "input", ['./data']) # default input directory
+        possible_args = list(filter(lambda x : not x.startswith('_'), args.__dir__()))
+        for key in options:
+            if key in possible_args:
+                setattr(args, key, [options[key]])
+    
+        
     # take the only argument as input
     rwar = SSG(args.output[0], args.stylesheet[0]
                if args.stylesheet is not None else None, args.lang[0])
