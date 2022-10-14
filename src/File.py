@@ -12,62 +12,62 @@ class SSG:
         if stylesheet is not None:
             self.stylesheets.append(stylesheet)
         try:
-            if Utils.checkIfOutFlag(self.output):
+            if Utils.check_if_out_flag(self.output):
                 mkdir(self.output)
             else:
                 mkdir(self.output + "/dist")
         except FileExistsError:
-            if Utils.checkIfOutFlag(self.output):  # default
+            if Utils.check_if_out_flag(self.output):  # default
                 shutil.rmtree(self.output)
                 mkdir(self.output)
             else:
                 shutil.rmtree(self.output + "/dist")
                 mkdir(self.output + "/dist")
         except FileNotFoundError:
-            Utils.errLog("Specified output directory not found")
+            Utils.err_log("Specified output directory not found")
         self.write_stylesheet_file(self.stylesheets[0])
 
     def write_stylesheet_file(self, stylesheet):
-        if Utils.checkIfOutFlag(self.output):
+        if Utils.check_if_out_flag(self.output):
             with open(self.output + stylesheet, "w", encoding="utf-8") as file:
                 # directory list styles
-                Utils.writeCSSToFile(file)
+                Utils.write_css_to_file(file)
         else:
             with open(
                 self.output + "/dist" + stylesheet, "w", encoding="utf-8"
             ) as file:
                 # directory list styles
-                Utils.writeCSSToFile(file)
+                Utils.write_css_to_file(file)
 
     def start(self, input, output=None):
-        if Utils.checkIfOutFlag(self.output):
+        if Utils.check_if_out_flag(self.output):
             output = self.output if output is None else output
         else:
             output = self.output + "/dist" if output is None else output
         if isfile(input) and input.endswith(".txt"):
             # single file, index of the static site
-            self.process_txt_file(input, output.rstrip("/") + "/index.txt")
+            self.process_file(input, output.rstrip("/") + "/index.txt")
         elif isfile(input) and input.endswith(".md"):
             # single file, index of the static site
             self.process_md_file(input, output.rstrip("/") + "/index.md")
         elif isdir(input):
             self.process_dir(input, output)
         else:
-            Utils.errLog("Invalid input file")
+            Utils.err_log("Invalid input file")
 
-    def before_content(self, html_file, html_title):
-        html_file.write("""<!DOCTYPE html>\n""")
-        html_file.write(f"""<html lang="{self.language}">\n""")
+    def before_content(self, file, title):
+        file.write("""<!DOCTYPE html>\n""")
+        file.write(f"""<html lang="{self.language}">\n""")
 
-        html_file.write("""<head>\n""")
-        html_file.write("""<meta charset="UTF-8">\n""")
-        html_file.write(
+        file.write("""<head>\n""")
+        file.write("""<meta charset="UTF-8">\n""")
+        file.write(
             """<meta name="viewport" content="width=device-width, initial-scale=1.0">\n"""
         )
-        html_file.write("""<meta http-equiv="X-UA-Compatible" content="ie=edge">\n""")
-        html_file.write(f"""<title>{html_title}</title>\n""")
+        file.write("""<meta http-equiv="X-UA-Compatible" content="ie=edge">\n""")
+        file.write(f"""<title>{title}</title>\n""")
 
-        html_file.write(
+        file.write(
             "\n".join(
                 [
                     f"""<link rel="stylesheet" href="{stylesheet}">"""
@@ -76,177 +76,162 @@ class SSG:
             )
         )
 
-        html_file.write("""\n</head>\n""")
+        file.write("""\n</head>\n""")
 
-        html_file.write("""<body>\n""")
-        html_file.write(f"""<h1>{html_title}</h1>\n""")
-        html_file.write("""<div class="content">\n""")
+        file.write("""<body>\n""")
+        file.write(f"""<h1>{title}</h1>\n""")
+        file.write("""<div class="content">\n""")
 
-    def after_content(self, html_file):
-        html_file.write("""</div>\n""")
-        html_file.write("""</body>\n""")
-        html_file.write("""</html>\n""")
+    def after_content(self, file):
+        file.write("""</div>\n""")
+        file.write("""</body>\n""")
+        file.write("""</html>\n""")
 
-    def process_txt_file(self, input_path, output_path):
-        with open(input_path, "r", encoding="utf-8") as txt_file:
-            lines = txt_file.readlines()
-        title = output_path.split("/")[-1][:-4]  # filename
-        title = title if title != "index" else output_path.split("/")[-2]
+    def process_file(self, input, output):
+        with open(input, "r", encoding="utf-8") as file:
+            lines = file.readlines()
+        title = output.split("/")[-1][:-4]  # filename
+        title = title if title != "index" else output.split("/")[-2]
         try:
             title = lines[0].strip()
             lines = lines[3:]
-            print(">> ", output_path.split("/")[-1][:-4])
+            print(">> ", output.split("/")[-1][:-4])
         except IndexError:
-            if len(lines) == 0 and input_path.endswith(".txt"):
-                Utils.errLog(f"Empty file passed: {title}.txt")
+            if len(lines) == 0 and input.endswith(".txt"):
+                Utils.err_log(f"Empty file passed: {title}.txt")
 
-        with open(output_path[:-4] + ".html", "w", encoding="utf-8") as html_file:
-            self.before_content(html_file, title)
+        with open(output[:-4] + ".html", "w", encoding="utf-8") as file:
+            self.before_content(file, title)
 
-            last_paragrph_index = 0
+            last_i = 0
             for i in range(len(lines)):
                 if lines[i] == "\n":
-                    html_file.write("""<p>\n""")
-                    html_file.write(" ".join(lines[last_paragrph_index:i]))
-                    html_file.write("""</p>\n""")
-                    last_paragrph_index = i + 1
+                    file.write("""<p>\n""")
+                    file.write(" ".join(lines[last_i:i]))
+                    file.write("""</p>\n""")
+                    last_i = i + 1
             # If there is no empty line at the end of the file
-            if last_paragrph_index < len(lines):
-                html_file.write("""<p>\n""")
-                html_file.write(" ".join(lines[last_paragrph_index:]))
-                html_file.write("""</p>\n""")
+            if last_i < len(lines):
+                file.write("""<p>\n""")
+                file.write(" ".join(lines[last_i:]))
+                file.write("""</p>\n""")
 
-            self.after_content(html_file)
+            self.after_content(file)
 
-    def process_md_file(self, input_path, output_path):
-        with open(input_path, "r", encoding="utf-8") as md_file:
-            lines = md_file.readlines()
-
-        title = output_path.split("/")[-1][:-3]  # index
-        title = title if title != "index" else output_path.split("/")[-2]
+    def process_md_file(self, input, output):
+        with open(input, "r", encoding="utf-8") as file:
+            lines = file.readlines()
+        title = output.split("/")[-1][:-3]  # index
+        title = title if title != "index" else output.split("/")[-2]
         print(">> ", title)
-
         for i in range(len(lines)):
             if lines[i].endswith("  \n"):
                 lines[i] = lines[i][:-3] + "<br>\n"
 
-        with open(output_path[:-3] + ".html", "w", encoding="utf-8") as html_file:
-            self.before_content(html_file, title)
+        with open(output[:-3] + ".html", "w", encoding="utf-8") as file:
+            self.before_content(file, title)
 
-            last_paragraph_index = 0
+            last_i = 0
             for i in range(len(lines)):
-                if lines[i] == "\n" and last_paragraph_index < i:
-                    html_file.write("""<p>\n""")
-                    html_file.write(" ".join(lines[last_paragraph_index:i]))
-                    html_file.write("""</p>\n""")
-                    last_paragraph_index = i + 1
+                if lines[i] == "\n" and last_i < i:
+                    file.write("""<p>\n""")
+                    file.write(" ".join(lines[last_i:i]))
+                    file.write("""</p>\n""")
+                    last_i = i + 1
                 elif lines[i] == "---\n" or lines[i] == "___\n" or lines[i] == "***\n":
                     # Print if pending text exists
-                    if last_paragraph_index < i:
-                        html_file.write("""<p>\n""")
-                        html_file.write(" ".join(lines[last_paragraph_index:i]))
-                        html_file.write("""</p>\n""")
+                    if last_i < i:
+                        file.write("""<p>\n""")
+                        file.write(" ".join(lines[last_i:i]))
+                        file.write("""</p>\n""")
                     # Print the hr
-                    html_file.write("""<hr>\n""")
-                    last_paragraph_index = i + 1
+                    file.write("""<hr>\n""")
+                    last_i = i + 1
                 elif lines[i].startswith("#"):
                     tag = "h" + str(lines[i].count("#"))
 
                     # Print if pending text exists
-                    if last_paragraph_index < i:
-                        html_file.write("""<p>\n""")
-                        html_file.write(" ".join(lines[last_paragraph_index:i]))
-                        html_file.write("""</p>\n""")
+                    if last_i < i:
+                        file.write("""<p>\n""")
+                        file.write(" ".join(lines[last_i:i]))
+                        file.write("""</p>\n""")
                     # check if hashtag
                     if lines[i].startswith("#"):
-                        html_file.write(
+                        file.write(
                             f"""\n<{tag}>""" + lines[i].strip("# ") + f"""</{tag}>\n"""
                         )
-                    last_paragraph_index = i + 1
+                    last_i = i + 1
             # If there is no empty line at the end of the file
-            if last_paragraph_index < len(lines):
-                html_file.write("""<p>\n""")
-                html_file.write(" ".join(lines[last_paragraph_index:]))
-                html_file.write("""</p>\n""")
+            if last_i < len(lines):
+                file.write("""<p>\n""")
+                file.write(" ".join(lines[last_i:]))
+                file.write("""</p>\n""")
 
-            self.after_content(html_file)
+            self.after_content(file)
 
-    def process_dir(self, input_path, output_path):
+    def process_dir(self, input, output):
         # directories in input folder
-        directories = sorted(
-            [f for f in listdir(input_path) if isdir(join(input_path, f))]
-        )
+        onlydir = sorted([f for f in listdir(input) if isdir(join(input, f))])
 
         # files in input folder
-        txt_files = sorted(
-            [
-                f
-                for f in listdir(input_path)
-                if isfile(join(input_path, f)) and f.endswith(".txt")
-            ]
+        onlytxt = sorted(
+            [f for f in listdir(input) if isfile(join(input, f)) and f.endswith(".txt")]
         )
-        md_files = sorted(
-            [
-                f
-                for f in listdir(input_path)
-                if isfile(join(input_path, f)) and f.endswith(".md")
-            ]
+        onlymd = sorted(
+            [f for f in listdir(input) if isfile(join(input, f)) and f.endswith(".md")]
         )
         # recursively process directories
-        for directory in directories:
-            mkdir(join(output_path, directory))
-            self.process_dir(join(input_path, directory), join(output_path, directory))
+        for directory in onlydir:
+            mkdir(join(output, directory))
+            self.process_dir(join(input, directory), join(output, directory))
 
         # process txt files
-        for txt_file in txt_files:
-            self.process_txt_file(
-                join(input_path, txt_file), join(output_path, txt_file)
-            )
+        for txtfile in onlytxt:
+            self.process_file(join(input, txtfile), join(output, txtfile))
 
         # process md files
-        for md_file in md_files:
-            self.process_md_file(join(input_path, md_file), join(output_path, md_file))
+        for mdfile in onlymd:
+            self.process_md_file(join(input, mdfile), join(output, mdfile))
 
         # title excluding the destination directory path
-        title = output_path[len(self.output) :]
+        title = output[len(self.output) :]
         title = title if title != "" else "RWAR"
         # exclude the first slash
         title = title[1:] if title.startswith("/") else title
-
         # create index.html file
-        with open(join(output_path, "index.html"), "w", encoding="utf-8") as html_file:
+        with open(join(output, "index.html"), "w", encoding="utf-8") as file:
 
-            self.before_content(html_file, title)
+            self.before_content(file, title)
 
-            html_file.write("""<ul>\n""")
+            file.write("""<ul>\n""")
             # List directories at first
-            html_file.write(
+            file.write(
                 "\n".join(
                     [
                         f"""<li><a href="{directory}/index.html">{directory}</a></li>"""
-                        for directory in directories
+                        for directory in onlydir
                     ]
                 )
             )
-            html_file.write("\n")
+            file.write("\n")
             # List files afterwards
-            html_file.write(
+            file.write(
                 "\n".join(
                     [
                         f"""<li><a href="{txtfile[:-4]+'.html'}">{txtfile[:-4]}</a></li>"""
-                        for txtfile in txt_files
+                        for txtfile in onlytxt
                     ]
                 )
             )
 
-            html_file.write(
+            file.write(
                 "\n".join(
                     [
                         f"""<li><a href="{mdfile[:-3]+'.html'}">{mdfile[:-3]}</a></li>"""
-                        for mdfile in md_files
+                        for mdfile in onlymd
                     ]
                 )
             )
-            html_file.write("""\n</ul>\n""")
+            file.write("""\n</ul>\n""")
 
-            self.after_content(html_file)
+            self.after_content(file)
