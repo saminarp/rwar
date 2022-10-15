@@ -8,61 +8,57 @@ from src.File import SSG
 from src.Utils import greeting
 from os.path import isfile
 
+args = Args()
+parser = argparse.ArgumentParser(
+    prog="rwar", description="Static site generator to create a website from text files"
+)
+parser.add_argument(
+    "--input",
+    "-i",
+    nargs=1,
+    required=(not ("--config" in sys.argv or "-c" in sys.argv)),
+    help="Input file/directory",
+)
+parser.add_argument(
+    "--output",
+    "-o",
+    nargs=1,
+    required=False,
+    help="Output directory (dist by default)",
+    default=["./dist"],
+)
+parser.add_argument(
+    "--stylesheet",
+    "-s",
+    nargs=1,
+    required=False,
+    default=["https://cdn.jsdelivr.net/npm/water.css@2/out/water.css"],
+    help="Stylesheet for generated HTML (by default:%(default)s)",
+)
+parser.add_argument("--version", "-v", action="version", version="%(prog)s v0.1")
+parser.add_argument(
+    "--lang",
+    "-l",
+    nargs=1,
+    required=False,
+    default=["en-CA"],
+    help="Language of the generated HTML (by default:%(default)s)",
+)
 
-def setup_parser():
-    parser = argparse.ArgumentParser(
-        prog="rwar",
-        description="Static site generator to create a website from text files",
-    )
-    parser.add_argument(
-        "--input",
-        "-i",
-        nargs=1,
-        required=(not ("--config" in sys.argv or "-c" in sys.argv)),
-        help="Input file/directory",
-    )
-    parser.add_argument(
-        "--output",
-        "-o",
-        nargs=1,
-        required=False,
-        help="Output directory (dist by default)",
-        default=["./dist"],
-    )
-    parser.add_argument(
-        "--stylesheet",
-        "-s",
-        nargs=1,
-        required=False,
-        default=["https://cdn.jsdelivr.net/npm/water.css@2/out/water.css"],
-        help="Stylesheet for generated HTML (by default:%(default)s)",
-    )
-    parser.add_argument("--version", "-v", action="version", version="%(prog)s v0.1")
-    parser.add_argument(
-        "--lang",
-        "-l",
-        nargs=1,
-        required=False,
-        default=["en-CA"],
-        help="Language of the generated HTML (by default:%(default)s)",
-    )
+parser.add_argument(
+    "--config",
+    "-c",
+    nargs=1,
+    required=False,
+    help="Configuration JSON file",
+    default=None,
+)
 
-    parser.add_argument(
-        "--config",
-        "-c",
-        nargs=1,
-        required=False,
-        help="Configuration JSON file",
-        default=None,
-    )
 
-    return parser
-
+# options = parser.parse_args()
 
 if __name__ == "__main__":
-    args = Args()
     greeting()
-    parser = setup_parser()
     args = parser.parse_args()
 
     if args.config is not None:
