@@ -1,5 +1,6 @@
 {
     "input": "./data",
+    "output": ".",
     "stylesheet": "https://cdn.jsdelivr.net/gh/kimeiga/bahunya/dist/bahunya.min.css",
     "lang": "fr",
     "feature": "feature - should be ignored for now"
