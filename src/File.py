@@ -114,7 +114,7 @@ class SSG:
             file.write("""</html>""")
 
     def process_md_file(self, input, output):
-        md_content = markdown2.markdown_path(input)
+        md_content = markdown2.markdown_path(input, extras=["fenced-code-blocks"])
 
         title = output.split("/")[-1][:-3]  # index
         title = title if title != "index" else output.split("/")[-2]
