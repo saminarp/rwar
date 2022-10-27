@@ -1,4 +1,5 @@
 import shutil
+import markdown2
 from os import listdir, mkdir
 from os.path import isfile, join, isdir
 from src import Utils
@@ -12,37 +13,35 @@ class SSG:
         if stylesheet is not None:
             self.stylesheets.append(stylesheet)
         try:
-            if Utils.check_if_out_flag(self.output):
+            if Utils.checkIfOutFlag(self.output):
                 mkdir(self.output)
             else:
                 mkdir(self.output + "/dist")
         except FileExistsError:
-            if Utils.check_if_out_flag(self.output):  # default
+            if Utils.checkIfOutFlag(self.output):  # default
                 shutil.rmtree(self.output)
                 mkdir(self.output)
             else:
                 shutil.rmtree(self.output + "/dist")
                 mkdir(self.output + "/dist")
         except FileNotFoundError:
-
-            Utils.err_log("Specified output directory not found")
+            Utils.errLog("Specified output directory not found")
         self.write_stylesheet_file(self.stylesheets[0])
 
     def write_stylesheet_file(self, stylesheet):
-        if Utils.check_if_out_flag(self.output):
-
+        if Utils.checkIfOutFlag(self.output):
             with open(self.output + stylesheet, "w", encoding="utf-8") as file:
                 # directory list styles
-                Utils.write_css_to_file(file)
+                Utils.writeCSSToFile(file)
         else:
             with open(
                 self.output + "/dist" + stylesheet, "w", encoding="utf-8"
             ) as file:
                 # directory list styles
-                Utils.write_css_to_file(file)
+                Utils.writeCSSToFile(file)
 
     def start(self, input, output=None):
-        if Utils.check_if_out_flag(self.output):
+        if Utils.checkIfOutFlag(self.output):
             output = self.output if output is None else output
         else:
             output = self.output + "/dist" if output is None else output
@@ -55,40 +54,7 @@ class SSG:
         elif isdir(input):
             self.process_dir(input, output)
         else:
-
-            Utils.err_log("Invalid input file")
-
-    def before_content(self, file, title):
-        file.write("""<!DOCTYPE html>\n""")
-        file.write(f"""<html lang="{self.language}">\n""")
-
-        file.write("""<head>\n""")
-        file.write("""<meta charset="UTF-8">\n""")
-        file.write(
-            """<meta name="viewport" content="width=device-width, initial-scale=1.0">\n"""
-        )
-        file.write("""<meta http-equiv="X-UA-Compatible" content="ie=edge">\n""")
-        file.write(f"""<title>{title}</title>\n""")
-
-        file.write(
-            "\n".join(
-                [
-                    f"""<link rel="stylesheet" href="{stylesheet}">"""
-                    for stylesheet in self.stylesheets
-                ]
-            )
-        )
-
-        file.write("""\n</head>\n""")
-
-        file.write("""<body>\n""")
-        file.write(f"""<h1>{title}</h1>\n""")
-        file.write("""<div class="content">\n""")
-
-    def after_content(self, file):
-        file.write("""</div>\n""")
-        file.write("""</body>\n""")
-        file.write("""</html>\n""")
+            Utils.errLog("Invalid input file")
 
     def process_file(self, input, output):
         with open(input, "r", encoding="utf-8") as file:
@@ -101,12 +67,34 @@ class SSG:
             print(">> ", output.split("/")[-1][:-4])
         except IndexError:
             if len(lines) == 0 and input.endswith(".txt"):
-
-                Utils.err_log(f"Empty file passed: {title}.txt")
+                Utils.errLog(f"Empty file passed: {title}.txt")
 
         with open(output[:-4] + ".html", "w", encoding="utf-8") as file:
-            self.before_content(file, title)
+            file.write("""<!DOCTYPE html>\n""")
+            file.write(f"""<html lang="{self.language}">\n""")
 
+            file.write("""<head>\n""")
+            file.write("""<meta charset="UTF-8">\n""")
+            file.write(
+                """<meta name="viewport" content="width=device-width, initial-scale=1.0">\n"""
+            )
+            file.write("""<meta http-equiv="X-UA-Compatible" content="ie=edge">\n""")
+            file.write(f"""<title>{title}</title>\n""")
+
+            file.write(
+                "\n".join(
+                    [
+                        f"""<link rel="stylesheet" href="{stylesheet}">"""
+                        for stylesheet in self.stylesheets
+                    ]
+                )
+            )
+
+            file.write("""\n</head>\n""")
+
+            file.write("""<body>\n""")
+            file.write(f"""<h1>{title}</h1>\n""")
+            file.write("""<div class="content">\n""")
             last_i = 0
             for i in range(len(lines)):
                 if lines[i] == "\n":
@@ -120,59 +108,49 @@ class SSG:
                 file.write(" ".join(lines[last_i:]))
                 file.write("""</p>\n""")
 
-            self.after_content(file)
+            file.write("""</div>\n""")
+            file.write("""</body>\n""")
+
+            file.write("""</html>""")
 
     def process_md_file(self, input, output):
-        with open(input, "r", encoding="utf-8") as file:
-            lines = file.readlines()
+        md_content = markdown2.markdown_path(input, extras=["fenced-code-blocks"])
+
         title = output.split("/")[-1][:-3]  # index
         title = title if title != "index" else output.split("/")[-2]
         print(">> ", title)
-        for i in range(len(lines)):
-            if lines[i].endswith("  \n"):
-                lines[i] = lines[i][:-3] + "<br>\n"
 
         with open(output[:-3] + ".html", "w", encoding="utf-8") as file:
+            file.write("""<!DOCTYPE html>\n""")
+            file.write(f"""<html lang="{self.language}">\n""")
 
-            self.before_content(file, title)
+            file.write("""<head>\n""")
+            file.write("""<meta charset="UTF-8">\n""")
+            file.write(
+                """<meta name="viewport" content="width=device-width, initial-scale=1.0">\n"""
+            )
+            file.write("""<meta http-equiv="X-UA-Compatible" content="ie=edge">\n""")
+            file.write(f"""<title>{title}</title>\n""")
 
-            last_i = 0
-            for i in range(len(lines)):
-                if lines[i] == "\n" and last_i < i:
-                    file.write("""<p>\n""")
-                    file.write(" ".join(lines[last_i:i]))
-                    file.write("""</p>\n""")
-                    last_i = i + 1
-                elif lines[i] == "---\n" or lines[i] == "___\n" or lines[i] == "***\n":
-                    # Print if pending text exists
-                    if last_i < i:
-                        file.write("""<p>\n""")
-                        file.write(" ".join(lines[last_i:i]))
-                        file.write("""</p>\n""")
-                    # Print the hr
-                    file.write("""<hr>\n""")
-                    last_i = i + 1
-                elif lines[i].startswith("#"):
-                    tag = "h" + str(lines[i].count("#"))
+            file.write(
+                "\n".join(
+                    [
+                        f"""<link rel="stylesheet" href="{stylesheet}">"""
+                        for stylesheet in self.stylesheets
+                    ]
+                )
+            )
 
-                    # Print if pending text exists
-                    if last_i < i:
-                        file.write("""<p>\n""")
-                        file.write(" ".join(lines[last_i:i]))
-                        file.write("""</p>\n""")
-                    # check if hashtag
-                    if lines[i].startswith("#"):
-                        file.write(
-                            f"""\n<{tag}>""" + lines[i].strip("# ") + f"""</{tag}>\n"""
-                        )
-                    last_i = i + 1
-            # If there is no empty line at the end of the file
-            if last_i < len(lines):
-                file.write("""<p>\n""")
-                file.write(" ".join(lines[last_i:]))
-                file.write("""</p>\n""")
+            file.write("""\n</head>\n""")
 
-            self.after_content(file)
+            file.write("""<body>\n""")
+            file.write(f"""<h1>{title}</h1>\n""")
+            file.write("""<div class="content">\n""")
+            file.write(md_content)
+            file.write("""</div>\n""")
+            file.write("""</body>\n""")
+
+            file.write("""</html>""")
 
     def process_dir(self, input, output):
         # directories in input folder
@@ -206,7 +184,29 @@ class SSG:
         # create index.html file
         with open(join(output, "index.html"), "w", encoding="utf-8") as file:
 
-            self.before_content(file, title)
+            file.write("""<!DOCTYPE html>\n""")
+            file.write(f"""<html lang="{self.language}">\n""")
+
+            file.write("""<head>\n""")
+            file.write("""<meta charset="UTF-8">\n""")
+            file.write(
+                """<meta name="viewport" content="width=device-width, initial-scale=1.0">\n"""
+            )
+            file.write("""<meta http-equiv="X-UA-Compatible" content="ie=edge">\n""")
+            file.write(f"""<title>{title}</title>\n""")
+            file.write(
+                "\n".join(
+                    [
+                        f"""<link rel="stylesheet" href="{stylesheet}">"""
+                        for stylesheet in self.stylesheets
+                    ]
+                )
+            )
+            file.write("""\n</head>\n""")
+
+            file.write("""<body>\n""")
+            file.write(f"""<h1>{title}</h1>\n""")
+            file.write("""<div class="content">\n""")
 
             file.write("""<ul>\n""")
             # List directories at first
@@ -239,4 +239,7 @@ class SSG:
             )
             file.write("""\n</ul>\n""")
 
-            self.after_content(file)
+            file.write("""</div>\n""")
+            file.write("""</body>\n""")
+
+            file.write("""</html>""")

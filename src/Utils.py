@@ -3,10 +3,8 @@ from pyfiglet import Figlet
 
 
 def greeting():
-
-    figlet = Figlet(font="slant")
-    puts(colored.magenta(figlet.renderText("rwar")))
-
+    f = Figlet(font="slant")
+    puts(colored.magenta(f.renderText("rwar")))
     puts(
         colored.green(
             "Static site generator to create a website from a directory of text files"
@@ -15,18 +13,17 @@ def greeting():
     puts(colored.green("Version 0.1"))
 
 
-def err_log(message):
+def errLog(msg):
     with indent(4, quote=">>>"):
-        puts(colored.red(message))
+        puts(colored.red(msg))
 
 
-def check_if_out_flag(output):
-
+def checkIfOutFlag(output):
     if output == "./dist":
         return True
     return False
 
 
-def write_css_to_file(css_file):
+def writeCSSToFile(file):
     # directory list styles
-    css_file.write("""ul { list-style-type: " →  "; }\n""")
+    file.write("""ul { list-style-type: " →  "; }\n""")
