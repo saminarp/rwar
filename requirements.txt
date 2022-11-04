@@ -13,3 +13,4 @@ urllib3==1.26.12
 yarg==0.1.9
 pylint==2.15.5
 black==22.10.0
+virtualenv==20.16.6
