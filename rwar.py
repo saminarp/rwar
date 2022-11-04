@@ -3,10 +3,10 @@
 import argparse
 import sys
 import json
+from os.path import isfile
 from clint.arguments import Args
 from src.File import SSG
 from src.Utils import greeting
-from os.path import isfile
 
 args = Args()
 parser = argparse.ArgumentParser(
@@ -59,28 +59,30 @@ parser.add_argument(
 
 if __name__ == "__main__":
     greeting()
-    args = parser.parse_args()
+    parser_args = parser.parse_args()
 
-    if args.config is not None:
-        if isfile(args.config[0]):
-            with open(args.config[0], "r") as f:
+    if parser_args.config is not None:
+        if isfile(parser_args.config[0]):
+            with open(parser_args.config[0], "r", encoding="utf-8") as f:
                 options = json.load(f)
         else:
             print("Config file not found")
-            exit(1)
+            sys.exit(1)
 
-        setattr(args, "input", ["./data"])  # default input directory
-        possible_args = list(filter(lambda x: not x.startswith("_"), args.__dir__()))
+        setattr(parser_args, "input", ["./data"])  # default input directory
+        possible_args = list(
+            filter(lambda x: not x.startswith("_"), parser_args.__dir__)
+        )
         for key in options:
             if key in possible_args:
-                setattr(args, key, [options[key]])
+                setattr(parser_args, key, [options[key]])
 
     # take the only argument as input
     rwar = SSG(
-        args.output[0],
-        args.stylesheet[0] if args.stylesheet is not None else None,
-        args.lang[0],
+        parser_args.output[0],
+        parser_args.stylesheet[0] if parser_args.stylesheet is not None else None,
+        parser_args.lang[0],
     )
 
     # start the static site generator
-    rwar.start(args.input[0])
+    rwar.start(parser_args.input[0])
