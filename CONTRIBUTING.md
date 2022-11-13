@@ -31,7 +31,7 @@ pylint ./rwar.py ./src/
 
 ## Testing 
 
-rwar uses the `unittest` framework for testing. To test the code, run the following command: 
+rwar uses the [unittest](https://docs.python.org/3/library/unittest.html) framework for testing. To test the code, run the following command: 
 ```sh
 python3 -m unittest discover  
 ```
