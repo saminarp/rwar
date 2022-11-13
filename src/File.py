@@ -16,14 +16,14 @@ class SSG:
             if Utils.checkIfOutFlag(self.output):
                 mkdir(self.output)
             else:
-                mkdir(self.output + "/dist")
+                mkdir(join(self.output, "dist"))
         except FileExistsError:
             if Utils.checkIfOutFlag(self.output):  # default
                 shutil.rmtree(self.output)
                 mkdir(self.output)
             else:
-                shutil.rmtree(self.output + "/dist")
-                mkdir(self.output + "/dist")
+                shutil.rmtree(join(self.output, "dist"))
+                mkdir(join(self.output, "dist"))
         except FileNotFoundError:
             Utils.errLog("Specified output directory not found")
         self.write_stylesheet_file(self.stylesheets[0])
@@ -35,7 +35,7 @@ class SSG:
                 Utils.writeCSSToFile(file)
         else:
             with open(
-                self.output + "/dist" + stylesheet, "w", encoding="utf-8"
+                join(self.output, "dist", stylesheet[1:]), "w", encoding="utf-8"
             ) as file:
                 # directory list styles
                 Utils.writeCSSToFile(file)
