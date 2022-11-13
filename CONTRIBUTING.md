@@ -28,3 +28,10 @@ rwar follows the [PEP8](https://www.python.org/dev/peps/pep-0008/) style guide a
 ```sh
 pylint ./rwar.py ./src/
 ```
+
+## Testing 
+
+rwar uses the `unittest` framework for testing. To test the code, run the following command: 
+```sh
+python3 -m unittest discover  
+```
