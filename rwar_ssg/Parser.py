@@ -7,7 +7,8 @@ from clint.arguments import Args
 
 def get_parser_args(args=Args().all):
     parser = argparse.ArgumentParser(
-        prog="rwar", description="Static site generator to create a website from text files"
+        prog="rwar",
+        description="Static site generator to create a website from text files",
     )
     parser.add_argument(
         "--input",
@@ -62,9 +63,7 @@ def get_parser_args(args=Args().all):
             sys.exit(3)
 
         setattr(parser_args, "input", ["./data"])  # default input directory
-        possible_args = list(
-            filter(lambda x: not x.startswith("_"), dir(parser_args))
-        )
+        possible_args = list(filter(lambda x: not x.startswith("_"), dir(parser_args)))
         for key in options:
             if key in possible_args:
                 setattr(parser_args, key, [options[key]])

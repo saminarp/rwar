@@ -3,7 +3,7 @@ import unittest
 import tempfile
 import os
 from os.path import join
-from src.File import SSG
+from rwar_ssg.File import SSG
 
 
 def write_txt(path):
