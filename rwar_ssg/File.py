@@ -2,7 +2,7 @@ import shutil
 from os import listdir, mkdir
 from os.path import isfile, join, isdir
 import markdown2
-from src import Utils
+from rwar_ssg import Utils
 
 
 class SSG:

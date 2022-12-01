@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from src.Parser import get_parser_args
-from src.File import SSG
-from src.Utils import greeting
+from rwar_ssg.Parser import get_parser_args
+from rwar_ssg.File import SSG
+from rwar_ssg.Utils import greeting
 
 # options = parser.parse_args()
 
